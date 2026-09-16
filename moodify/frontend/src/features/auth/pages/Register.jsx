@@ -3,6 +3,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router"
 import { Link } from "react-router"
 import "../css/FormGroup.scss"
+import "../../shared/style/button.scss"
 import { useAuth } from "../hooks/useAuth"
 
 
@@ -15,7 +16,7 @@ const Register = () => {
     const [confirmpassword, setConfirmpassword] = useState("")
 
     const navigate = useNavigate()
-    const {loading, handleRegister} = useAuth()
+    const { handleRegister} = useAuth()
 
     async function handleSubmit(e){
         e.preventDefault()

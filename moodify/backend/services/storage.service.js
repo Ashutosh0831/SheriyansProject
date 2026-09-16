@@ -7,7 +7,7 @@ const client = new ImageKit({
 
 async function uploadFile({buffer, filename, folder = ""}){
     const file = await client.files.upload({
-        file: ImageKit.toFile(Buffer.from(buffer)),
+        file: await ImageKit.toFile(Buffer.from(buffer)),
         fileName: filename,
         folder
     })

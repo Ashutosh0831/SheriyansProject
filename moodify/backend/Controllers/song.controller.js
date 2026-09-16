@@ -3,6 +3,7 @@ const id3 = require("node-id3");
 const storageService = require("../services/storage.service.js");
 const songModel = require("../models/song.model.js");
 
+
 async function uploadSong(req, res) {
   try {
     const songBuffer = req.file.buffer;
@@ -10,17 +11,18 @@ async function uploadSong(req, res) {
 
     const tags = id3.read(songBuffer);
 
-    const songFile = await storageService.uploadFile({
-      buffer: songBuffer,
-      filename: tags.title + ".mp3",
-      folder: "/moodify/songs",
-    });
-
-    const posterUrl = await storageService.uploadFile({
-      buffer: tags.image.imageBuffer,
-      filename: tags.title + ".jpeg",
-      folder: "/moodify/poster",
-    });
+    const [songFile, posterUrl] = await Promise.all([
+      storageService.uploadFile({
+        buffer: songBuffer,
+        filename: tags.title + ".mp3",
+        folder: "/moodify/songs",
+      }),
+      storageService.uploadFile({
+        buffer: tags.image.imageBuffer,
+        filename: tags.title + ".jpeg",
+        folder: "/moodify/poster",
+      }),
+    ]);
 
     const song = await SongModel.create({
       title: tags.title,
@@ -39,4 +41,29 @@ async function uploadSong(req, res) {
   }
 }
 
-module.exports = uploadSong;
+async function getSong(req, res){
+  const {mood} = req.query
+
+  const song = await SongModel.findOne({mood})
+
+  res.status(200).json({
+    message: "Song fetched successfully",
+    song
+  })
+}
+
+async function allSong(req, res){
+  const { mood } = req.query;
+  const query = mood && mood !== "neutral" ? { mood } : {};
+  const songs = await SongModel.find(query);
+
+  res.status(200).json({
+    message: mood && mood !== "neutral" ? `These are '${mood}' songs` : "These are all songs",
+    songs,
+  });
+}
+
+module.exports = {uploadSong,
+  getSong,
+  allSong
+};

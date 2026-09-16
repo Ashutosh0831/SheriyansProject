@@ -54,9 +54,15 @@ async function registerController(req, res){
 async function loginController(req, res){
     const {username, email, password} = req.body;
 
-    if(username == "" || email == "" || password == ""){
+    if(!username && !email){
         return res.status(400).json({
-            message: "Fields are required."
+            message: "Username or email is required."
+        })
+    }
+
+    if(!password){
+        return res.status(400).json({
+            message: "Password is required."
         })
     }
 
@@ -66,8 +72,6 @@ async function loginController(req, res){
             {email}
         ]
     }).select("+password");
-
-    
 
     if(!isUser){
         return res.status(400).json({
@@ -90,8 +94,16 @@ async function loginController(req, res){
 
     res.cookie("token", token)
 
+    const safeUser = {
+        _id: isUser._id,
+        name: isUser.name,
+        username: isUser.username,
+        email: isUser.email,
+    }
+
     res.status(200).json({
-        message: "Login Successfull."
+        message: "Login Successfull.",
+        user: safeUser
     })
 }
 

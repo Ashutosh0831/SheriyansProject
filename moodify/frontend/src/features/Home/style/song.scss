@@ -1,0 +1,21 @@
+.song{
+    display: flex;
+    gap: 5px;
+
+
+    img{
+        border: 50%;
+        background-color: radial-gradient(circle at 5, red, green, yellow);
+    }
+
+    .songDetails{
+        color: grey;
+        background-color: whitesmoke;
+        border-radius: 10px;
+        padding: 0.5rem;
+
+        h4,p{
+            font-size: medium;
+        }
+    }
+}

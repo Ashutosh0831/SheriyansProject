@@ -2,20 +2,21 @@ import { useEffect, useRef, useState } from "react";
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import "../css/button.scss"
 
-export default function FaceExpression() {
+export default function FaceExpression({ onClick = () => {} }) {
   const videoRef = useRef(null);
   const landmarkerRef = useRef(null);
   const animationRef = useRef(null);
   const [expression, setExpression] = useState("Detecting...");
   const [isDetecting, setIsDetecting] = useState(false);
 
-  // Detect function
   const detect = () => {
     if (!landmarkerRef.current || !videoRef.current) return;
+
     const results = landmarkerRef.current.detectForVideo(
       videoRef.current,
       performance.now()
     );
+
     if (results.faceBlendshapes?.length > 0) {
       const blendshapes = results.faceBlendshapes[0].categories;
       const getScore = (name) =>
@@ -30,14 +31,22 @@ export default function FaceExpression() {
 
       let currentExpression = "Neutral 😐";
       if (smileLeft > 0.5 && smileRight > 0.5) {
-        currentExpression = "Happy 😄";
+        currentExpression = "happy";
       } else if (jawOpen > 0.3 && browUp > 0.3) {
-        currentExpression = "Surprised 😲";
+        currentExpression = "surprised";
       } else if (frownLeft > 0.3 && frownRight > 0.3) {
-        currentExpression = "Sad 😢";
+        currentExpression = "sad";
       }
+
       setExpression(currentExpression);
+
+      if (currentExpression !== "Neutral 😐") {
+        onClick(currentExpression);
+      }
+
+      return currentExpression;
     }
+
     if (isDetecting) {
       animationRef.current = requestAnimationFrame(detect);
     }
@@ -82,23 +91,29 @@ export default function FaceExpression() {
     if (isDetecting) {
       setIsDetecting(false);
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      return;
     } else {
       setIsDetecting(true);
       detect();
     }
   };
 
+  async function handleClick(){
+    const mood = handleToggleDetection()
+    onClick({mood})
+  }
+
   return (
     <div style={{ textAlign: "center" }}>
       <video
         ref={videoRef}
-        style={{ width: "600px", borderRadius: "12px", marginTop: "100px" }}
+        style={{ width: "600px", height: "400px", borderRadius: "12px", backgroundColor: "black"}}
         playsInline
         muted
       />
       <h2>{expression}</h2>
-      <button onClick={handleToggleDetection}>
-        {isDetecting ? "Stop Detection" : "Start Detection"}
+      <button onClick={handleClick}>
+        Detect
       </button>
     </div>
   );

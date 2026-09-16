@@ -4,6 +4,7 @@ import { useState } from "react"
 import "../css/FormGroup.scss"
 import { useAuth } from "../hooks/useAuth"
 import { useNavigate } from "react-router"
+import "../../shared/style/button.scss"
 
 
 const Login = () => {
@@ -11,13 +12,15 @@ const Login = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
-    const {loading, handleLogin} = useAuth()
+    const { handleLogin} = useAuth()
     const navigate = useNavigate()
 
     async function handleSubmit(e){
         e.preventDefault()
         await handleLogin({username, password})
         navigate("/")
+        setUsername("")
+        setPassword("")
     }
 
   return (
