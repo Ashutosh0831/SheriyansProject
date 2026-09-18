@@ -8,6 +8,20 @@ const Header = () => {
 
   const displayName = user?.name || user?.username || "Guest";
 
+  const isName = user?.name
+
+  let btn = ""
+  let btn1 = "Login"
+
+  if(isName){
+    btn = "Logout"
+    btn1 = ""
+  }
+
+  async function loginPage(){
+    navigate("/login")
+  }
+
   async function nextPage() {
     await handleLogout();
     navigate("/logout");
@@ -26,7 +40,8 @@ const Header = () => {
             <h5>{displayName}</h5>
           </div>
           <div className="log">
-            <button onClick={nextPage}>logout</button>
+            <button onClick={nextPage}>{btn}</button>
+            <button onClick={loginPage}>{btn1}</button>
           </div>
         </div>
       </div>

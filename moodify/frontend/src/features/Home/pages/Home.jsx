@@ -5,7 +5,7 @@ import SongBox from "../components/SongBox";
 import { useSong } from "../hooks/useSong";
 
 const Home = () => {
-  const { handleGetSong } = useSong();
+  const { handleAllSong } = useSong();
 
   return (
     <>
@@ -14,7 +14,7 @@ const Home = () => {
         <div className="songbox-container">
           <SongBox />
         </div>
-        <FaceExpress onClick={(mood) => handleGetSong({ mood })} />
+        <FaceExpress onClick={(mood) => handleAllSong({ mood })} />
         <Player />
       </div>
     </>

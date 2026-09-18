@@ -13,7 +13,7 @@ export async function getSong({ mood }) {
   return response.data;
 }
 
-export async function allSong({mood = "neutral"}){
+export async function allSong({mood}){
 
   const response = await api.get("/songs/all",{
     params: {mood},

@@ -1,20 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
-import "../css/button.scss"
+import "../css/button.scss";
 
 export default function FaceExpression({ onClick = () => {} }) {
   const videoRef = useRef(null);
   const landmarkerRef = useRef(null);
   const animationRef = useRef(null);
+  const lastMoodRef = useRef(null);
+  const isDetectingRef = useRef(false);
   const [expression, setExpression] = useState("Detecting...");
   const [isDetecting, setIsDetecting] = useState(false);
 
-  const detect = () => {
-    if (!landmarkerRef.current || !videoRef.current) return;
+  const scheduleDetection = () => {
+    if (isDetectingRef.current) {
+      animationRef.current = requestAnimationFrame(detect);
+    }
+  };
+
+  const detect = (timestamp) => {
+    if (!landmarkerRef.current || !videoRef.current) {
+      scheduleDetection();
+      return;
+    }
 
     const results = landmarkerRef.current.detectForVideo(
       videoRef.current,
-      performance.now()
+      timestamp,
     );
 
     if (results.faceBlendshapes?.length > 0) {
@@ -29,7 +40,7 @@ export default function FaceExpression({ onClick = () => {} }) {
       const frownLeft = getScore("mouthFrownLeft");
       const frownRight = getScore("mouthFrownRight");
 
-      let currentExpression = "Neutral 😐";
+      let currentExpression = "neutral";
       if (smileLeft > 0.5 && smileRight > 0.5) {
         currentExpression = "happy";
       } else if (jawOpen > 0.3 && browUp > 0.3) {
@@ -40,16 +51,21 @@ export default function FaceExpression({ onClick = () => {} }) {
 
       setExpression(currentExpression);
 
-      if (currentExpression !== "Neutral 😐") {
+      if (currentExpression !== "neutral") {
+        lastMoodRef.current = currentExpression;
         onClick(currentExpression);
+        isDetectingRef.current = false;
+        setIsDetecting(false);
+        animationRef.current = null;
+        return currentExpression;
       }
 
+      lastMoodRef.current = null;
+      scheduleDetection();
       return currentExpression;
     }
 
-    if (isDetecting) {
-      animationRef.current = requestAnimationFrame(detect);
-    }
+    scheduleDetection();
   };
 
   // Initialize camera + model
@@ -58,7 +74,7 @@ export default function FaceExpression({ onClick = () => {} }) {
     const init = async () => {
       try {
         const vision = await FilesetResolver.forVisionTasks(
-          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
+          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm",
         );
         landmarkerRef.current = await FaceLandmarker.createFromOptions(vision, {
           baseOptions: {
@@ -80,6 +96,7 @@ export default function FaceExpression({ onClick = () => {} }) {
     init();
 
     return () => {
+      isDetectingRef.current = false;
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       if (landmarkerRef.current) landmarkerRef.current.close();
       if (stream) stream.getTracks().forEach((track) => track.stop());
@@ -89,31 +106,37 @@ export default function FaceExpression({ onClick = () => {} }) {
   // Toggle detection loop
   const handleToggleDetection = () => {
     if (isDetecting) {
+      isDetectingRef.current = false;
       setIsDetecting(false);
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
       return;
     } else {
+      isDetectingRef.current = true;
       setIsDetecting(true);
-      detect();
+      scheduleDetection();
     }
   };
 
-  async function handleClick(){
-    const mood = handleToggleDetection()
-    onClick({mood})
+  function handleClick() {
+    handleToggleDetection();
   }
 
   return (
     <div style={{ textAlign: "center" }}>
       <video
         ref={videoRef}
-        style={{ width: "600px", height: "400px", borderRadius: "12px", backgroundColor: "black"}}
+        style={{
+          width: "600px",
+          height: "400px",
+          borderRadius: "12px",
+          backgroundColor: "black",
+        }}
         playsInline
         muted
       />
       <h2>{expression}</h2>
       <button onClick={handleClick}>
-        Detect
+        {isDetecting ? "Detecting..." : "Detect"}
       </button>
     </div>
   );

@@ -4,12 +4,12 @@ export const SongContext = createContext();
 
 export const SongContextProvider = ({ children }) => {
   const [song, setSong] = useState({
-    url: "https://ik.imagekit.io/ashu05/moodify/songs/Haareya_Song___Meri_Pyaari_Bindu___Ayushmann__Parineeti___Arijit_Singh___Sachin-Jigar__Priya_Saraiya_lakGgD8oN.mp3",
+    url: "No song",
     posterUrl:
-      "https://ik.imagekit.io/ashu05/moodify/poster/Haareya_Song___Meri_Pyaari_Bindu___Ayushmann__Parineeti___Arijit_Singh___Sachin-Jigar__Priya_Saraiya_0fMa7b_QR.jpeg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7lD1O7OQM6zEGxbnzaNAevYujcVv0M0n9CFFQl4iylA&s=10",
     title:
-      "Haareya Song | Meri Pyaari Bindu | Ayushmann, Parineeti | Arijit Singh…",
-    mood: "happy",
+      "No Song",
+    mood: "MOOD",
   });
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(false);

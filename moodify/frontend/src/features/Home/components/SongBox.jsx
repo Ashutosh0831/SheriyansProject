@@ -3,11 +3,11 @@ import "../style/extra.scss";
 import { useSong } from "../hooks/useSong";
 
 const SongBox = () => {
-  const { song, songs, handleAllSong } = useSong();
+  const { song, songs, setSong, handleAllSong } = useSong();
 
   useEffect(() => {
-    handleAllSong({ mood: "neutral" });
-  }, []);
+    handleAllSong();
+  }, [handleAllSong]);
 
   const displaySongs = songs.length ? songs : song ? [song] : [];
 
@@ -15,9 +15,20 @@ const SongBox = () => {
     <>
       <div className="songbox">
         {displaySongs.map((item) => (
-          <div key={item?._id || item?.url || item?.title}>
+          <div
+            key={item?._id || item?.url || item?.title}
+            role="button"
+            tabIndex={0}
+            onClick={() => setSong(item)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                setSong(item);
+              }
+            }}
+          >
             <img src={item?.posterUrl} alt={item?.title} />
             <h6>{item?.title}</h6>
+            {/* <button>{item?.title}</button> */}
           </div>
         ))}
       </div>
@@ -25,4 +36,4 @@ const SongBox = () => {
   );
 };
 
-export default SongBox
+export default SongBox;
