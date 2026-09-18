@@ -1,36 +1,46 @@
-import axios from "axios"
-
+import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:5000/api",
-    withCredentials: true
-})
+  baseURL: import.meta.env.VITE_BACKEND_URL,
+  withCredentials: true,
+});
 
-export async function register({name, username, email, password, confirmpassword}){
-    const response = await api.post("/auth/register", {
-        name, username, email, password, confirmpassword
-    })
+export async function register({
+  name,
+  username,
+  email,
+  password,
+  confirmpassword,
+}) {
+  const response = await api.post("/auth/register", {
+    name,
+    username,
+    email,
+    password,
+    confirmpassword,
+  });
 
-    return response.data
+  return response.data;
 }
 
-export async function login({username, email, password}){
-    const response = await api.post("/auth/login",{
-        username, email, password
-    })
+export async function login({ username, email, password }) {
+  const response = await api.post("/auth/login", {
+    username,
+    email,
+    password,
+  });
 
-    return response.data
+  return response.data;
 }
 
+export async function getUser() {
+  const response = await api.get("/auth/get-user");
 
-export async function getUser(){
-    const response = await api.get("/auth/get-user")
-
-    return response.data
+  return response.data;
 }
 
-export async function logout(){
-    const response = await api.post("/auth/logout")
+export async function logout() {
+  const response = await api.post("/auth/logout");
 
-    return response.data
+  return response.data;
 }
