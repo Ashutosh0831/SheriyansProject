@@ -1,153 +1,164 @@
-const authModel = require("../models/auth.model.js")
-const webtoken = require("jsonwebtoken")
-const bcrypt = require("bcryptjs")
-const redis = require("../config/cache.js")
+const authModel = require("../models/auth.model.js");
+const webtoken = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const redis = require("../config/cache.js");
 
-async function registerController(req, res){
-    const {name, email, username, password, confirmpassword } = req.body
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+};
 
-    if(name == "" || email == "" || username == "" || password == "" || confirmpassword == ""){
-        return res.status(401).json({
-            message: "All fields need to be filled."
-        })
-    }
+async function registerController(req, res) {
+  const { name, email, username, password, confirmpassword } = req.body;
 
-    if (password != confirmpassword){
-        return res.status(400).json({
-            message: "Confirm passwrod mismatch."
-        })
-    }
-
-    const isUser = await authModel.findOne({username
+  if (
+    name == "" ||
+    email == "" ||
+    username == "" ||
+    password == "" ||
+    confirmpassword == ""
+  ) {
+    return res.status(401).json({
+      message: "All fields need to be filled.",
     });
+  }
 
-    if(isUser){
-        return res.status(400).json({
-            message: "User already exists."
-        })
-    }
-    
-    const hashpassword = await bcrypt.hash(password,10);
+  if (password != confirmpassword) {
+    return res.status(400).json({
+      message: "Confirm passwrod mismatch.",
+    });
+  }
 
-    const user = await authModel.create({
-        name: name,
-        email: email,
-        username: username,
-        password: hashpassword
-    })
+  const isUser = await authModel.findOne({ username });
 
-    const token = webtoken.sign({
-        id:user._id,
-        username: user.username,
-    },process.env.JWT_TOKEN)
+  if (isUser) {
+    return res.status(400).json({
+      message: "User already exists.",
+    });
+  }
 
-    res.cookie("token", token)
+  const hashpassword = await bcrypt.hash(password, 10);
 
-    const safeUser = await authModel.findOne({username})
+  const user = await authModel.create({
+    name: name,
+    email: email,
+    username: username,
+    password: hashpassword,
+  });
 
-    res.status(201).json({
-        message: "User registred successfully.",
-        user:safeUser
-    })  
+  const token = webtoken.sign(
+    {
+      id: user._id,
+      username: user.username,
+    },
+    process.env.JWT_TOKEN,
+  );
+
+  res.cookie("token", token, cookieOptions);
+
+  const safeUser = await authModel.findOne({ username });
+
+  res.status(201).json({
+    message: "User registred successfully.",
+    user: safeUser,
+  });
 }
 
-async function loginController(req, res){
-    const {username, email, password} = req.body;
+async function loginController(req, res) {
+  const { username, email, password } = req.body;
 
-    if(!username && !email){
-        return res.status(400).json({
-            message: "Username or email is required."
-        })
-    }
+  if (!username && !email) {
+    return res.status(400).json({
+      message: "Username or email is required.",
+    });
+  }
 
-    if(!password){
-        return res.status(400).json({
-            message: "Password is required."
-        })
-    }
+  if (!password) {
+    return res.status(400).json({
+      message: "Password is required.",
+    });
+  }
 
-    const isUser = await authModel.findOne({
-        $or:[
-            {username},
-            {email}
-        ]
-    }).select("+password");
-
-    if(!isUser){
-        return res.status(400).json({
-            message: "User does not exists"
-        })
-    }
-
-    const isPassword = await bcrypt.compare(password,isUser.password)
-
-    if(!isPassword){
-        return res.status(400).json({
-            message: "password is incoorect."
-        })
-    }
-
-    const token = webtoken.sign({
-        id: isUser._id,
-        username: isUser.username
-    }, process.env.JWT_TOKEN)
-
-    res.cookie("token", token)
-
-    const safeUser = {
-        _id: isUser._id,
-        name: isUser.name,
-        username: isUser.username,
-        email: isUser.email,
-    }
-
-    res.status(200).json({
-        message: "Login Successfull.",
-        user: safeUser
+  const isUser = await authModel
+    .findOne({
+      $or: [{ username }, { email }],
     })
+    .select("+password");
+
+  if (!isUser) {
+    return res.status(400).json({
+      message: "User does not exists",
+    });
+  }
+
+  const isPassword = await bcrypt.compare(password, isUser.password);
+
+  if (!isPassword) {
+    return res.status(400).json({
+      message: "password is incoorect.",
+    });
+  }
+
+  const token = webtoken.sign(
+    {
+      id: isUser._id,
+      username: isUser.username,
+    },
+    process.env.JWT_TOKEN,
+  );
+
+  res.cookie("token", token, cookieOptions);
+
+  const safeUser = {
+    _id: isUser._id,
+    name: isUser.name,
+    username: isUser.username,
+    email: isUser.email,
+  };
+
+  res.status(200).json({
+    message: "Login Successfull.",
+    user: safeUser,
+  });
 }
 
-async function getUserController(req, res){
-    const user = await authModel.findById(req.user.id)
+async function getUserController(req, res) {
+  const user = await authModel.findById(req.user.id);
 
-    if(!user){
-        return res.staus(400).json({
-            message: "User not avilable"
-        })
-    }
+  if (!user) {
+    return res.staus(400).json({
+      message: "User not avilable",
+    });
+  }
 
-    res.status(200).json({
-        message: "user found",
-        user
-    })
-
-
-
-
-
+  res.status(200).json({
+    message: "user found",
+    user,
+  });
 }
 
-async function logoutController(req,res){
-    const token = req.cookies.token
+async function logoutController(req, res) {
+  const token = req.cookies.token;
 
-    if(!token){
-        return res.status(400).json({
-            message: "Login First"
-        })
-    }
+  if (!token) {
+    return res.status(400).json({
+      message: "Login First",
+    });
+  }
 
-    res.clearCookie("token")
+  res.clearCookie("token", cookieOptions);
 
-    await redis.set(token, Date.now().toString());
+  await redis.set(token, Date.now().toString());
 
-    res.status(200).json({
-        message: "User Logout successfully"
-    })
+  res.status(200).json({
+    message: "User Logout successfully",
+  });
 }
 
 module.exports = {
-    loginController,
-    logoutController,
-    getUserController,
-    registerController,
-}
+  loginController,
+  logoutController,
+  getUserController,
+  registerController,
+};
