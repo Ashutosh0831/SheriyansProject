@@ -7,7 +7,7 @@ const cors = require("cors")
 const App = express();
 
 const allowedOrigins = [
-    // "http://localhost:5173",
+    "http://localhost:5173",
     "https://moodifyplayer-4woi.onrender.com",
 ]
 
