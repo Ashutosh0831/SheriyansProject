@@ -3,11 +3,17 @@ const webtoken = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const redis = require("../config/cache.js");
 
-const cookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-};
+function getCookieOptions(req) {
+  const isHttpsRequest = req.get("origin")?.startsWith("https://");
+
+  return {
+    httpOnly: true,
+    secure: isHttpsRequest || process.env.NODE_ENV === "production",
+    sameSite:
+      isHttpsRequest || process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
+  };
+}
 
 async function registerController(req, res) {
   const { name, email, username, password, confirmpassword } = req.body;
@@ -55,7 +61,7 @@ async function registerController(req, res) {
     process.env.JWT_TOKEN,
   );
 
-  res.cookie("token", token, cookieOptions);
+  res.cookie("token", token, getCookieOptions(req));
 
   const safeUser = await authModel.findOne({ username });
 
@@ -108,7 +114,7 @@ async function loginController(req, res) {
     process.env.JWT_TOKEN,
   );
 
-  res.cookie("token", token, cookieOptions);
+  res.cookie("token", token, getCookieOptions(req));
 
   const safeUser = {
     _id: isUser._id,
@@ -147,7 +153,7 @@ async function logoutController(req, res) {
     });
   }
 
-  res.clearCookie("token", cookieOptions);
+  res.clearCookie("token", getCookieOptions(req));
 
   await redis.set(token, Date.now().toString());
 
