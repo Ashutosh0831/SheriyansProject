@@ -11,11 +11,12 @@ const Home = () => {
     <>
       <Header />
       <div className="main-container">
+        <FaceExpress onClick={(mood) => handleAllSong({ mood })} />
+        <Player />
         <div className="songbox-container">
           <SongBox />
         </div>
-        <FaceExpress onClick={(mood) => handleAllSong({ mood })} />
-        <Player />
+        
       </div>
     </>
   );

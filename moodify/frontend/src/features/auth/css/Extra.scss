@@ -1,16 +1,22 @@
-.logout-container{
+.logout-container {
+  margin-top: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-    margin-top: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    font-style: italic;
+    font-weight: 600;
+  }
+}
 
-    h3{
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: large;
-        font-style: italic;
-        font-weight: 600;
-    }
-
+@media (max-width: 600px) {
+  .logout-container {
+    margin-top: 35vh;
+    padding: 1rem;
+    text-align: center;
+  }
 }

@@ -1,56 +1,96 @@
-.FormContainer{
+.FormContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .form-box {
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 5rem;
 
-    .form-box{
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 5rem;
-
-        h1{
-            color: rgb(130, 82, 226);
-            padding: 2rem;
-        }
-
-        .form-container{
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            
-
-            label{
-                padding: 1rem;
-                color: rgb(241, 239, 183);
-                border: 2px white solid;
-                border-radius: 10px;
-                margin-right: 20px;
-            }
-
-            input{
-                padding: 1rem;
-                border-radius: 20px;
-                font-size: large;
-            }
-
-
-        }
-
-
-        p{
-            padding: 2rem;
-
-            .link{
-                color: rgb(229, 10, 10);
-                text-decoration: none;
-                padding: 1rem;
-                font-size: large;
-            }
-        }
+    h1 {
+      color: rgb(130, 82, 226);
+      padding: 2rem;
     }
+
+    .form-container {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      label {
+        padding: 1rem;
+        color: rgb(241, 239, 183);
+        border: 2px white solid;
+        border-radius: 10px;
+        margin-right: 20px;
+      }
+
+      input {
+        padding: 1rem;
+        border-radius: 20px;
+        font-size: large;
+      }
+    }
+
+    p {
+      padding: 2rem;
+
+      .link {
+        color: rgb(229, 10, 10);
+        text-decoration: none;
+        padding: 1rem;
+        font-size: large;
+      }
+    }
+  }
 }
 
+@media (max-width: 600px) {
+  .FormContainer {
+    width: 100%;
+    padding: 1rem;
+
+    .form-box {
+      width: 100%;
+      padding: 2rem 0.5rem;
+
+      h1 {
+        padding: 1rem;
+        font-size: 1.75rem;
+        text-align: center;
+      }
+
+      .form-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        margin-top: 12px;
+
+        label {
+          margin-right: 0;
+          padding: 0.7rem;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.8rem;
+          font-size: 1rem;
+        }
+      }
+
+      p {
+        padding: 1.5rem 0.5rem;
+        text-align: center;
+
+        .link {
+          padding: 0.5rem;
+        }
+      }
+    }
+  }
+}

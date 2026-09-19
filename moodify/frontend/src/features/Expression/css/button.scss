@@ -1,7 +1,15 @@
-button{
-    margin-top: 20px;
-    padding: 0.5rem;
-    background-color: antiquewhite;
-    color: red;
-    border-radius: 10px;
+button {
+  margin-top: 20px;
+  padding: 0.5rem;
+  background-color: antiquewhite;
+  color: red;
+  border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+  button {
+    max-width: 100%;
+    padding: 0.65rem 0.8rem;
+    font-size: 0.95rem;
+  }
 }
