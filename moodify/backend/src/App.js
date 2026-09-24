@@ -9,7 +9,6 @@ const App = express();
 const allowedOrigins = [
     "http://localhost:5173",
     "https://moodifyplayer.onrender.com",
-    "https://moodifyplayer-4woi.onrender.com",
 ]
 
 App.use(express.json());

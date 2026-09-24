@@ -16,12 +16,19 @@ const Register = () => {
     const [confirmpassword, setConfirmpassword] = useState("")
 
     const navigate = useNavigate()
-    const { handleRegister} = useAuth()
+    const { message,handleRegister} = useAuth()
 
     async function handleSubmit(e){
         e.preventDefault()
-        await handleRegister({name, username, email, password, confirmpassword})
-        navigate("/login")
+        const isRegister = await handleRegister({name, username, email, password, confirmpassword})
+        if(isRegister){
+            navigate("/login")
+            setName("")
+            setUsername("")
+            setEmail("")
+            setPassword("")
+            setConfirmpassword("")
+        }
     }
     
   return (
@@ -29,6 +36,7 @@ const Register = () => {
     <main className="FormContainer">
         <div className="form-box">
             <h1>Register Form</h1>
+            <p>{message}</p>
             <form onSubmit={handleSubmit}>
             <FormGroup type="text" value={name} onChange={(e)=>{
                 setName(e.target.value)

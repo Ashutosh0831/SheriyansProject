@@ -13,10 +13,11 @@ export const SongContextProvider = ({ children }) => {
   });
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   return (
     <SongContext.Provider
-      value={{ song, setSong, songs, setSongs, loading, setLoading }}
+      value={{ song, setSong, songs, setSongs, loading, setLoading, message, setMessage }}
     >
       {children}
     </SongContext.Provider>

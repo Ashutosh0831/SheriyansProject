@@ -12,15 +12,17 @@ const Login = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
-    const { handleLogin} = useAuth()
+    const {message, handleLogin} = useAuth()
     const navigate = useNavigate()
 
     async function handleSubmit(e){
         e.preventDefault()
-        await handleLogin({username, password})
-        navigate("/")
-        setUsername("")
-        setPassword("")
+        const isLoggedIn = await handleLogin({username, password})
+        if (isLoggedIn) {
+            navigate("/")
+            setUsername("")
+            setPassword("")
+        }
     }
 
   return (
@@ -28,8 +30,8 @@ const Login = () => {
     <main className="FormContainer">
         <div className="form-box">
             <h1>Login Form</h1>
+            <p className="error-msg">{message}</p>
             <form onSubmit={handleSubmit}>
-
                 <FormGroup type="text"
                 value={username}
                 onChange={(e)=>{
