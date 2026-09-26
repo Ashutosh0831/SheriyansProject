@@ -102,7 +102,7 @@ async function loginController(req, res) {
 
   if (!isPassword) {
     return res.status(400).json({
-      message: "password is incoorect.",
+      message: "User credential is incorrect",
     });
   }
 
@@ -124,7 +124,6 @@ async function loginController(req, res) {
   };
 
   res.status(200).json({
-    message: "Login Successfull.",
     user: safeUser,
   });
 }
