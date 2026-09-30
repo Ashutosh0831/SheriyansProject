@@ -1,0 +1,54 @@
+h1{
+  margin-bottom: 20px;
+  margin-left: 500px;
+  margin-top: 50px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+  span{
+    color: brown;
+  }
+}
+
+.pdf-desc{
+  margin-left: 400px;
+  height: fit-content;
+  width: 800px;
+}
+
+.form-container{
+display: flex;
+gap: 700px;
+margin-left: 200px;
+margin-top: 100px;
+width: fit-content;
+padding: 2rem;
+
+  form {
+    margin-top: 60px;
+  #media {
+    padding: 0.5rem;
+    border-radius: 10px;
+    background-color: aliceblue;
+  }
+
+  button {
+    margin-left: 20px;
+    margin-top: 15px;
+    padding: 0.3rem;
+    border-radius: 10px;
+    background-color: rgb(67, 183, 67);
+  }
+}
+.circle-container{
+  width: 200px;
+  height: 200px;
+  background-color: rgba(112, 101, 101, 0.409);
+  border-radius: 50%;
+  border: 2px red;
+}
+}
+
+
+
+
+

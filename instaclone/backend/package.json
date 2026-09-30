@@ -13,6 +13,7 @@
   "dependencies": {
     "@imagekit/nodejs": "^7.3.0",
     "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
     "expressjs": "^1.0.1",
     "multer": "^2.0.2"
   }
