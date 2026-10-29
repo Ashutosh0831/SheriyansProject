@@ -9,9 +9,7 @@ local setup. They are not currently connected into one application.
 | Project                          | What it does                                                              | Main technologies                                                                      | Current state                                                                                                                    |
 | -------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | [Instagram Clone](./instaclone/) | Social photo-sharing app with account flows, posts, likes, and following. | React, Vite, Sass, Node.js, Express-style API, MongoDB/Mongoose, JWT, Multer, ImageKit | Authentication and several post/follow API routes exist. The post creation UI and feed are still incomplete/not fully connected. |
-
 | [Moodify](./moodify/) | Mood-based music player that uses facial-expression detection to select songs. | React, Vite, MediaPipe Tasks Vision, Sass, Node.js, Express, MongoDB/Mongoose, Redis, JWT, ImageKit | Includes authentication, song APIs, uploads, and camera-based expression detection. See the [Moodify README](./moodify/README.md) for its API and setup details. |
-
 | [Resume Builder](./resume-builder/) | Resume editor with a dashboard, live preview, account flows, and AI-assisted writing. | Next.js, React, TypeScript, Tailwind CSS, MongoDB/Mongoose, bcrypt, JWT, Google Gemini | Core pages and APIs are present. Database and AI features need their environment variables and services configured. |
 
 ## Project structure
