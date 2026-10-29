@@ -96,6 +96,21 @@ async function postlikeController(req, res){
         message : "You like a post"
     })
 }
+
+async function allPostController(req,res){
+    const allpost = await postModel.find().populate("user")
+
+    if(!allpost){
+        return res.status(404).json({
+            messgae: "No post is here to show"
+        })
+    }
+
+    return res.status(200).json({
+        message: ""
+    })
+}
+
 module.exports = {
     postController,
     getPostController,

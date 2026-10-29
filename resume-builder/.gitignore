@@ -3,6 +3,10 @@
 #env
 .env.local
 
+changed.md
+
+/changed.md
+
 # dependencies
 /node_modules
 /.pnp
